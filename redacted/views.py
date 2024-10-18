@@ -123,7 +123,25 @@ def from_options(opt_name, options=[]):
         if opt['name'] == opt_name:
             return opt['value']
     return None
-
+"""
+constraints=efficiency_MIN_5
+&constraints=amberControl_MIN_0
+&constraints=expectedAmber_MIN_0
+&constraints=artifactControl_MIN_0
+&constraints=creatureControl_MIN_0
+&constraints=efficiency_MIN_0
+&constraints=recursion_MIN_0
+&constraints=disruption_MIN_0
+&constraints=effectivePower_MIN_0
+&constraints=bonusAmber_MIN_0
+&constraints=bonusCapture_MIN_0
+&constraints=bonusDraw_MIN_0
+&constraints=creatureCount_MIN_0
+&constraints=actionCount_MIN_0
+&constraints=artifactCount_MIN_0
+&constraints=upgradeCount_MIN_0
+&constraints=maverickCount_MIN_0
+"""
 def get_filters(owner, min_sas=None, max_sas=None, expansion=None):
     expansions = []
     constraints = []
