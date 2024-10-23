@@ -94,11 +94,14 @@ def discord_webhook_ingress(request):
                 min_sas=from_options('min', options)
                 max_sas=from_options('max', options)
                 expansion=from_options('set', options)
+                # Requires discord bot update
+                efficiency_parameter=from_options('ep', options)
+                efficiency=from_options('efi', options)
                 if not owner:
                     sa_id = int(body_json['member']['user']['id'])
                     sa = SocialAccount.objects.get(uid=sa_id)
                     owner = sa.user.profile.dok_handle
-                filters = get_filters(owner, min_sas, max_sas, expansion)
+                filters = get_filters(owner, min_sas, max_sas, expansion, efficiency_parameter, efficiency)
                 deck_info = get_random_deck_from_dok(filters)
                 content = deck_info['url']
                 # TODO = put filters in content
@@ -123,26 +126,8 @@ def from_options(opt_name, options=[]):
         if opt['name'] == opt_name:
             return opt['value']
     return None
-"""
-constraints=efficiency_MIN_5
-&constraints=amberControl_MIN_0
-&constraints=expectedAmber_MIN_0
-&constraints=artifactControl_MIN_0
-&constraints=creatureControl_MIN_0
-&constraints=efficiency_MIN_0
-&constraints=recursion_MIN_0
-&constraints=disruption_MIN_0
-&constraints=effectivePower_MIN_0
-&constraints=bonusAmber_MIN_0
-&constraints=bonusCapture_MIN_0
-&constraints=bonusDraw_MIN_0
-&constraints=creatureCount_MIN_0
-&constraints=actionCount_MIN_0
-&constraints=artifactCount_MIN_0
-&constraints=upgradeCount_MIN_0
-&constraints=maverickCount_MIN_0
-"""
-def get_filters(owner, min_sas=None, max_sas=None, expansion=None):
+
+def get_filters(owner, min_sas=None, max_sas=None, expansion=None, efficiency_parameter=None, efficiency=None):
     expansions = []
     constraints = []
     if min_sas:
@@ -159,6 +144,13 @@ def get_filters(owner, min_sas=None, max_sas=None, expansion=None):
         })
     if expansion:
         expansions.append(expansion)
+    if efficiency_parameter:
+        if efficiency:
+            constraints.append({
+                'property': 'efficiency',
+                'cap': efficiency_parameter,
+                'value': efficiency,     
+            })
     filters = {
         'owner': owner,
         'constraints': constraints,
@@ -177,11 +169,15 @@ def random_access_archives(request):
             min_sas = form.cleaned_data['min_sas']
             max_sas = form.cleaned_data['max_sas']
             expansion = form.cleaned_data['expansion']
+            efficiency_parameter = form.cleaned_data['efficiency_parameter']
+            efficiency = form.cleaned_data['efficiency']
             filters = get_filters(
                 owner=dok_username,
                 min_sas=min_sas,
                 max_sas=max_sas,
                 expansion=expansion,
+                efficiency_parameter=efficiency_parameter,
+                efficiency=efficiency,
             )
             try:
                 deck_info = get_random_deck_from_dok(filters=filters)

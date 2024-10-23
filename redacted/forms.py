@@ -19,6 +19,11 @@ EXPANSION_CHOICES = [
     (874, _('More Mutation')),
 ]
 
+PARAMETER_CHOICE = [
+    (None, _('MIN')),
+    (1, _('MIN')),
+    (2, _('MAX')),
+]
 
 class RandomDecksFromDokForm(forms.Form):
     dok_username = forms.CharField(max_length=100, label=_('DoK username'))
@@ -41,3 +46,34 @@ class RandomDecksFromDokForm(forms.Form):
         widget=forms.Select(
             choices=EXPANSION_CHOICES)
     )
+    efficiency_parameter = forms.IntegerField(
+        required=False,
+        widget=forms.Select(
+            choices=PARAMETER_CHOICE)
+    )
+    efficiency = forms.IntegerField(
+        required=False,
+        label=_('Efficiency'),
+        widget=forms.NumberInput(
+            attrs={
+                'placeholder': _('Any')}
+        ))
+    
+# TODO?
+"""
+amberControl=None
+expectedAmber=None
+artifactControl=None
+creatureControl=None
+recursion=None
+disruption=None
+effectivePower=None
+bonusAmber=None
+bonusCapture=None
+bonusDraw=None
+creatureCount=None
+actionCount=None
+artifactCount=None
+upgradeCount=None
+maverickCount=None
+"""
